@@ -17,7 +17,7 @@ jobs:
       - name: Set misc environment variables
         run: |
           echo "XC_BEARER_TOKEN=${{ secrets.XC_BEARER_TOKEN }}" >> $GITHUB_ENV
-          echo "N1SC_TIMESTAMP=$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")" >> $GITHUB_ENV
+          echo "N1SC_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
           echo "N1SC_COMMIT_HASH=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
           echo "N1SC_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
@@ -38,4 +38,5 @@ jobs:
         run: |
           curl -X PUT --location 'https://nginx-tenant1.staging.volterra.us/api/nginx/one/namespaces/default/instances/${{ vars.N1SC_INSTANCE }}/config' \
             -H 'Authorization: Bearer ${{ secrets.XC_BEARER_TOKEN }}' \
-            --data '{ "aux": [], "conf_path": "/etc/nginx/nginx.conf", "configs": [ { "files": [ { "contents": "${{ env.NGINX_CONF_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "nginx.conf", "size": 2756 }, { "contents": "${{ env.MIME_TYPES_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "mime.types
+            --data '{ "aux": [], "conf_path": "/etc/nginx/nginx.conf", "configs": [ { "files": [ { "contents": "${{ env.NGINX_CONF_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "nginx.conf", "size": 2756 }, { "contents": "${{ env.MIME_TYPES_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "mime.types", "size": 2756} ], "name": "/etc/nginx" }, { "files": [ { "contents": "${{ env.DEFAULT_CONF_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "default.conf", "size": 908 } ], "name": "/etc/nginx/conf.d" }], "object_id": "nc_Mw2aZnqkSkyB6g3dR6BdGw" }' \
+            -H "Content-Type: application/json"
