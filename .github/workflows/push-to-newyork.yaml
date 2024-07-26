@@ -26,8 +26,8 @@ jobs:
           echo "NGINX_CONF_CONFIG_FILE=$(echo '# Modified by NGINX One API $(date) branch: ${{ env.N1SC_BRANCH }} commit hash: ${{ env.N1SC_COMMIT_HASH }}' | cat - newyork-01/etc/nginx/nginx.conf | base64 -w 0)" >> $GITHUB_ENV
           echo "MIME_TYPES_CONFIG_FILE=$(cat newyork-01/etc/nginx/mime.types | base64 -w 0)" >> $GITHUB_ENV
           echo "DEFAULT_CONF_CONFIG_FILE=$(cat newyork-01/etc/nginx/conf.d/default.conf | base64 -w 0)" >> $GITHUB_ENV
-          echo "SSL_CERT=`cat newyork-01/etc/nginx/ssl/server.crt; | base64 -w 0`" >> $GITHUB_ENV
-          echo "SSL_KEY=`cat newyork-01/etc/nginx/ssl/server.key; | base64 -w 0`" >> $GITHUB_ENV
+          echo "SSL_CERT=$(cat newyork-01/etc/nginx/ssl/server.crt; | base64 -w 0)" >> $GITHUB_ENV
+          echo "SSL_KEY=$(cat newyork-01/etc/nginx/ssl/server.key; | base64 -w 0)" >> $GITHUB_ENV
 
       - name: API call to NGINX One Saas Console - Fetch Instances
         run: |
