@@ -31,6 +31,15 @@ jobs:
         run: |
           echo "SSL_CERT=$(echo '${{ secrets.SSL_CERT }}' | base64 -w 0)" >> $GITHUB_ENV
           echo "SSL_KEY=$(echo '${{ secrets.SSL_KEY }}' | base64 -w 0)" >> $GITHUB_ENV
+          echo "SSL_CERT_LENGTH=$(echo '${{ secrets.SSL_CERT }}' | wc -c)" >> $GITHUB_ENV
+          echo "SSL_KEY_LENGTH=$(echo '${{ secrets.SSL_KEY }}' | wc -c)" >> $GITHUB_ENV
+
+      - name: Debug encoded SSL cert and key
+        run: |
+          echo "SSL_CERT (first 100 chars): ${SSL_CERT:0:100}"
+          echo "SSL_KEY (first 100 chars): ${SSL_KEY:0:100}"
+          echo "SSL_CERT length: ${{ env.SSL_CERT_LENGTH }}"
+          echo "SSL_KEY length: ${{ env.SSL_KEY_LENGTH }}"
 
       - name: API call to NGINX One Saas Console - Fetch Instances
         run: |
