@@ -41,6 +41,11 @@ jobs:
           echo "SSL_CERT length: ${{ env.SSL_CERT_LENGTH }}"
           echo "SSL_KEY length: ${{ env.SSL_KEY_LENGTH }}"
 
+      - name: Create nginx user and group
+        run: |
+          sudo groupadd -r nginx || true
+          sudo useradd -r -g nginx -s /sbin/nologin nginx || true
+
       - name: Prepare NGINX Configuration
         run: |
           echo "Preparing NGINX configuration and SSL files..."
