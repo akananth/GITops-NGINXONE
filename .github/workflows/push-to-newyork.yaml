@@ -35,7 +35,8 @@ jobs:
       - name: Validate NGINX Configuration
         run: |
           echo "$NGINX_CONF_CONFIG_FILE" | base64 -d > /tmp/nginx.conf
-          sudo nginx -t -c /tmp/nginx.conf
+          sudo chmod 644 /tmp/nginx.conf  # Ensure the file has correct permissions
+          sudo nginx -t -c /tmp/nginx.conf || { echo "NGINX config test failed"; exit 1; }
 
       - name: Debugging - List Files
         run: |
