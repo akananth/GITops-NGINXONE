@@ -32,19 +32,6 @@ jobs:
           echo "SSL_CERT=$(echo '${{ secrets.SSL_CERT }}' | base64 -w 0)" >> $GITHUB_ENV
           echo "SSL_KEY=$(echo '${{ secrets.SSL_KEY }}' | base64 -w 0)" >> $GITHUB_ENV
 
-      - name: Validate NGINX Configuration
-        run: |
-          echo "$NGINX_CONF_CONFIG_FILE" | base64 -d > /tmp/nginx.conf
-          sudo chmod 644 /tmp/nginx.conf  # Ensure the file has correct permissions
-          sudo nginx -t -c /tmp/nginx.conf || { echo "NGINX config test failed"; exit 1; }
-
-      - name: Debugging - List Files
-        run: |
-          echo "Checking file sizes..."
-          ls -lh /tmp/nginx.conf
-          echo "Contents:"
-          cat /tmp/nginx.conf
-
       - name: API call to NGINX One Saas Console - Fetch Instances
         run: |
           curl --location 'https://${{ vars.N1SC_HOSTNAME }}${{ vars.N1SC_API_PATH }}/${{ vars.N1SC_NAMESPACE }}/instances/?filter_fields=instance_status&filter_ops=IN&filter_values=online&paginated=false' \
@@ -56,6 +43,6 @@ jobs:
           RESPONSE=$(curl -X PUT --location 'https://nginx-tenant1.staging.volterra.us/api/nginx/one/namespaces/default/instances/${{ vars.N1SC_INSTANCE }}/config' \
             -H 'Authorization: APIToken ${{ secrets.XC_API_TOKEN }}' \
             --data '{ "aux": [], "conf_path": "/etc/nginx/nginx.conf", "configs": [ { "files": [ { "contents": "${{ env.NGINX_CONF_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "nginx.conf", "size": 2756 }, { "contents": "${{ env.MIME_TYPES_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "mime.types", "size": 2756} ], "name": "/etc/nginx" }, { "files": [ { "contents": "${{ env.DEFAULT_CONF_CONFIG_FILE }}", "mtime": "1970-01-01T00:00:00Z", "name": "default.conf", "size": 908 } ], "name": "/etc/nginx/conf.d" }, { "files": [ { "contents": "${{ env.SSL_CERT }}", "mtime": "1970-01-01T00:00:00Z", "name": "server.crt", "size": 2048 }, { "contents": "${{ env.SSL_KEY }}", "mtime": "1970-01-01T00:00:00Z", "name": "server.key", "size": 2048 } ], "name": "/etc/nginx/ssl" }], "object_id": "inst_OaV4v1QXRGm_T1atbMbLJw" }' \
-            -H "Content-Type: application/json" || echo "Failed to push configuration"
+            -H "Content-Type: application/json")
           echo "Response: $RESPONSE"
           echo "$RESPONSE" | jq . || echo "Failed to parse JSON response"
