@@ -44,6 +44,7 @@ jobs:
       - name: Prepare NGINX Configuration
         run: |
           echo "Preparing NGINX configuration and SSL files..."
+          sudo mkdir -p /etc/nginx/conf.d /etc/nginx/ssl
           echo "${{ env.NGINX_CONF_CONFIG_FILE }}" | base64 -d | sudo tee /etc/nginx/nginx.conf > /dev/null
           echo "${{ env.MIME_TYPES_CONFIG_FILE }}" | base64 -d | sudo tee /etc/nginx/mime.types > /dev/null
           echo "${{ env.DEFAULT_CONF_CONFIG_FILE }}" | base64 -d | sudo tee /etc/nginx/conf.d/default.conf > /dev/null
